@@ -34,6 +34,9 @@ const userModel = mongoose.Schema(
       type: Number,
       defaultValue:0
     },
+    token: {
+      type: String
+    },
   },
   {
     timestamps: true,
@@ -41,7 +44,7 @@ const userModel = mongoose.Schema(
 );
 
 userModel.pre("save", async function (next) {
-  if (!this.isModified) {
+  if (!this.isModified("password")) {
     next();
   }
   const salt = await bcrypt.genSalt(10);
