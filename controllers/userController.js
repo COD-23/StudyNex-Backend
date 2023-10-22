@@ -11,7 +11,7 @@ const register = asyncHandler(async (req, res) => {
     const { name, username, email, password, mobile_number, image, points } =
       req.body;
 
-    if (!name || !username || !password || !mobile_number || !image) {
+    if (!name || !username || !password || !mobile_number) {
       errorResponse({ res, message: "Please fill required fields!" });
     }
     const emailExists = await User.findOne({ email });
@@ -65,7 +65,10 @@ const register = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
+    if(!user){
+      user = await User.findOne({ username:email });
+    }
     if (user && (await user.matchPassword(password))) {
       const data = {
         _id: user._id,
@@ -83,7 +86,7 @@ const login = asyncHandler(async (req, res) => {
         data: data,
       });
     } else {
-      errorResponse({ res, message: "User not found!" });
+      errorResponse({ res, message: "Invalid credentials!" });
     }
   } catch (error) {
     errorResponse({ res, message: "Something went wrong!" });
@@ -112,7 +115,7 @@ const sendPasswordMail = (name, email, token) => {
       from: process.env.EMAIL,
       to: email,
       subject: "For Reset Password",
-      html: `<p>Hi ${name}, Please copy the link <a href="http://localhost:3000/reset-password?token=${token}">and reset your password.</a></p>`,
+      html: `<p>Hi ${name}, Please copy the link <a href="http://localhost:3000/reset-password/${token}">and reset your password.</a></p>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
