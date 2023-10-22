@@ -115,7 +115,11 @@ const sendPasswordMail = (name, email, token) => {
       from: process.env.EMAIL,
       to: email,
       subject: "For Reset Password",
-      html: `<p>Hi ${name}, Please copy the link <a href="http://localhost:3000/reset-password/${token}">and reset your password.</a></p>`,
+      html: `<p>Hi ${name}, Please copy the link <a href="${
+        process.env.APP_ENV === "production"
+          ? "https://study-nex.vercel.app"
+          : "http://localhost:3000"
+      }/reset-password/${token}">and reset your password.</a></p>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
