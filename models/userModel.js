@@ -28,7 +28,6 @@ const userModel = mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
     },
     points: {
       type: Number,
