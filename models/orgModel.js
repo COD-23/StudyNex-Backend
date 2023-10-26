@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const orgModel = mongoose.Schema({
   admin_id: {
-    type: String,
+    type: mongoose.Schema.ObjectId,
     required: true,
   },
   name: {
@@ -13,7 +13,12 @@ const orgModel = mongoose.Schema({
     type: String,
     required: true,
   },
-  users: [mongoose.Schema.ObjectId],
+  users: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Organizations", orgModel);
