@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name": "music-album",
+    "name": "study-nex",
     "builds": [
        { "src": "server.js", "use": "@vercel/node" }
     ],
