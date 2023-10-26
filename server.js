@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDatabase = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
+const orgRoutes = require('./routes/orgRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -14,6 +15,7 @@ const port = process.env.PORT || '3001';
 connectDatabase();
 
 app.use("/api/",userRoutes);
+app.use("/api/",orgRoutes);
 
 app.listen(port, () => {
     console.log(`Server listening on ${port}`);
