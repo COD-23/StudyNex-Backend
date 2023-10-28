@@ -6,9 +6,9 @@ const User = require("../models/userModel");
 
 const createOrg = asyncHandler(async (req, res) => {
   try {
-    const { admin_id, name } = req.body;
+    const { admin_id, name, image } = req.body;
 
-    if (!admin_id || !name) {
+    if (!admin_id || !name || !image) {
       errorResponse({ res, message: "Please fill required fields!" });
     }
     const orgExists = await Org.findOne({ name });
@@ -19,12 +19,11 @@ const createOrg = asyncHandler(async (req, res) => {
         message: "Organization with same name already exists!",
       });
 
-    // const userData = await Org.populate("users");
-
     const org = await Org.create({
       admin_id,
       name,
       org_code: randomstring.generate(7),
+      image
     });
 
     if (org) {
@@ -32,6 +31,7 @@ const createOrg = asyncHandler(async (req, res) => {
         admin_id: org.admin_id,
         name: org.name,
         org_code: org.org_code,
+        image: org.image,
       };
       successResponse({
         res,
@@ -58,12 +58,13 @@ const joinOrg = asyncHandler(async (req, res) => {
       errorResponse({ res, message: "Please fill required fields!" });
     }
 
+    //Storing id of the user to Org collection 
     const org = await Org.findOne({ org_code: org_code });
     org.users.push(userId);
     await org.save(); // updating document
-    if (org) {
-      const userData = await org.populate("users");
 
+    if (org) {
+      const userData = await org.populate("users"); // retrieving respective users data using populate
       successResponse({
         res,
         message: "Organization joined successfully",
