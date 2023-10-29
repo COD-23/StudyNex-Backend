@@ -31,10 +31,13 @@ const userModel = mongoose.Schema(
     },
     points: {
       type: Number,
-      defaultValue:0
+      defaultValue: 0,
     },
     token: {
-      type: String
+      type: String,
+    },
+    org_joined: {
+      type: String,
     },
   },
   {

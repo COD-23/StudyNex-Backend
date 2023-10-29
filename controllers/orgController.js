@@ -23,7 +23,7 @@ const createOrg = asyncHandler(async (req, res) => {
       admin_id,
       name,
       org_code: randomstring.generate(7),
-      image
+      image,
     });
 
     if (org) {
@@ -58,13 +58,20 @@ const joinOrg = asyncHandler(async (req, res) => {
       errorResponse({ res, message: "Please fill required fields!" });
     }
 
-    //Storing id of the user to Org collection 
     const org = await Org.findOne({ org_code: org_code });
-    org.users.push(userId);
-    await org.save(); // updating document
 
     if (org) {
+      //Storing id of the user to Org collection
+      org.users.push(userId);
+      await org.save(); // updating document
+
+      //Linking user with org
+      const user = await User.findOne({ _id: userId });
+      user.org_joined = org.slug;
+      await user.save();
+
       const userData = await org.populate("users"); // retrieving respective users data using populate
+      
       successResponse({
         res,
         message: "Organization joined successfully",
@@ -73,7 +80,7 @@ const joinOrg = asyncHandler(async (req, res) => {
     } else {
       errorResponse({
         res,
-        message: "Something went wrong! Unable to join organization",
+        message: "Oraganization doesn't exist",
       });
     }
   } catch (error) {
