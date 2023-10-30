@@ -17,9 +17,9 @@ const fetch = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { admin_id, name, image } = req.body;
+    const { name, image } = req.body;
 
-    if (!admin_id || !name || !image) {
+    if (!name || !image) {
       errorResponse({ res, message: "Please fill required fields!" });
     }
     const orgExists = await Org.findOne({ name });
@@ -32,7 +32,7 @@ const create = async (req, res) => {
     }
 
     const org = await Org.create({
-      admin_id,
+      admin_id: req.user._id,
       name,
       org_code: randomstring.generate(7),
       image,
