@@ -9,10 +9,6 @@ const fetch = async (req, res) => {
   const org = await Org.findOne({ slug: query.org });
   await org.populate("users","-password");
   await org.populate("admin_id","-password");
-  // const data = {
-  //   org: org,
-  //   users: users,
-  // };
   return org;
 };
 
@@ -89,4 +85,33 @@ const join = async (req, res) => {
     errorResponse({ res, message: "Something went wrong!" });
   }
 };
-module.exports = { create, join, fetch };
+
+const leave = async (req, res) => {
+  try {
+    const { org_code } = req.body;
+
+    if (!org_code) {
+      errorResponse({ res, message: "Please fill required fields!" });
+    }
+
+    const org = await Org.findOne({ org_code: org_code });
+
+    if (org) {
+      //Storing id of the user to Org collection
+      org.users.pull(req.user._id);
+      await org.save(); // updating document
+
+      //Linking user with org
+      const user = await User.findOne({ _id: req.user._id });
+      user.org_joined = undefined;
+      await user.save();
+
+      const userData = await org.populate("users","-password"); // retrieving respective users data using populate
+      return userData;
+    }
+  } catch (error) {
+    console.log(error);
+    errorResponse({ res, message: "Something went wrong!" });
+  }
+};
+module.exports = { create, join, fetch,leave };

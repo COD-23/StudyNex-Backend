@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { errorResponse, successResponse } = require("../helpers/apiResponse");
-const { create, join, fetch } = require("../services/orgService");
+const { create, join, fetch, leave } = require("../services/orgService");
 
 const createOrg = asyncHandler(async (req, res) => {
   const data = await create(req, res);
@@ -18,17 +18,17 @@ const createOrg = asyncHandler(async (req, res) => {
   }
 });
 
-const getOrg = asyncHandler(async(req,res) =>{
-  const data = await fetch(req,res);
-  if(data){
+const getOrg = asyncHandler(async (req, res) => {
+  const data = await fetch(req, res);
+  if (data) {
     res.status(200).send(data);
-  }else{
+  } else {
     errorResponse({
       res,
       message: "Something went wrong! Unable to fetch organizations",
-    })
+    });
   }
-})
+});
 
 const joinOrg = asyncHandler(async (req, res) => {
   const data = await join(req, res);
@@ -47,6 +47,21 @@ const joinOrg = asyncHandler(async (req, res) => {
   }
 });
 
+const leaveOrg = asyncHandler(async (req, res) => {
+  const data = await leave(req, res);
 
+  if (data) {
+    successResponse({
+      res,
+      message: "Organization leaved successfully",
+      data: data,
+    });
+  } else {
+    errorResponse({
+      res,
+      message: "Please enter valid code.",
+    });
+  }
+});
 
-module.exports = { createOrg, joinOrg,getOrg };
+module.exports = { createOrg, joinOrg, getOrg, leaveOrg };

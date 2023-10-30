@@ -1,7 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
-const { createOrg,joinOrg, getOrg } = require("../controllers/orgController");
+const { createOrg,joinOrg, getOrg, leaveOrg } = require("../controllers/orgController");
 const protect = require('../middlewares/authMiddleware');
 
 
@@ -9,6 +9,7 @@ const protect = require('../middlewares/authMiddleware');
 
 router.route("/create-org").post(protect,createOrg);
 router.route("/join-org").post(protect,joinOrg);
+router.route("/leave-org").post(protect,leaveOrg);
 router.route("/get-org").get(protect,getOrg);
 
 module.exports = router;
