@@ -7,7 +7,8 @@ const { errorResponse } = require("../helpers/apiResponse");
 const fetch = async (req, res) => {
   const { query } = req;
   const org = await Org.findOne({ slug: query.org });
-  await org.populate("users");
+  await org.populate("users","-password");
+  await org.populate("admin_id","-password");
   // const data = {
   //   org: org,
   //   users: users,
@@ -44,7 +45,14 @@ const create = async (req, res) => {
         name: org.name,
         org_code: org.org_code,
         image: org.image,
+        slug: org.slug,
       };
+
+      //Linking user with org
+      const user = await User.findOne({ _id: req.user._id });
+      user.org_joined = org.slug;
+      await user.save();
+
       return data;
     }
   } catch (error) {
@@ -55,9 +63,9 @@ const create = async (req, res) => {
 
 const join = async (req, res) => {
   try {
-    const { userId, org_code } = req.body;
+    const { org_code } = req.body;
 
-    if (!userId) {
+    if (!org_code) {
       errorResponse({ res, message: "Please fill required fields!" });
     }
 
@@ -65,15 +73,15 @@ const join = async (req, res) => {
 
     if (org) {
       //Storing id of the user to Org collection
-      org.users.push(userId);
+      org.users.push(req.user._id);
       await org.save(); // updating document
 
       //Linking user with org
-      const user = await User.findOne({ _id: userId });
+      const user = await User.findOne({ _id: req.user._id });
       user.org_joined = org.slug;
       await user.save();
 
-      const userData = await org.populate("users"); // retrieving respective users data using populate
+      const userData = await org.populate("users","-password"); // retrieving respective users data using populate
       return userData;
     }
   } catch (error) {

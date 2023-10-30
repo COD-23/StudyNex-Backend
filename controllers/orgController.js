@@ -42,7 +42,7 @@ const joinOrg = asyncHandler(async (req, res) => {
   } else {
     errorResponse({
       res,
-      message: "Please enter valid code.Oraganization doesn't exist!!",
+      message: "Please enter valid code.",
     });
   }
 });

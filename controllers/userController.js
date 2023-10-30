@@ -47,6 +47,7 @@ const register = asyncHandler(async (req, res) => {
         username: user.username,
         image: user.image,
         points: user.points,
+        org_joined:user.org_joined,
         token: generateToken(user._id),
       };
       successResponse({
