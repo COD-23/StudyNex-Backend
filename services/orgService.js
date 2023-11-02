@@ -7,8 +7,10 @@ const { errorResponse } = require("../helpers/apiResponse");
 const fetch = async (req, res) => {
   const { query } = req;
   const org = await Org.findOne({ slug: query.org });
-  await org.populate("users","-password");
-  await org.populate("admin_id","-password");
+  if(org){
+    await org.populate("users", "-password");
+    await org.populate("admin_id", "-password");
+  }
   return org;
 };
 
