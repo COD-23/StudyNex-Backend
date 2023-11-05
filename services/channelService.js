@@ -1,5 +1,6 @@
 const { errorResponse } = require("../helpers/apiResponse");
 const Channel = require("../models/channelModel");
+const Org = require("../models/orgModel");
 
 const create = async (req, res) => {
   try {
@@ -56,7 +57,8 @@ const join = async (req, res) => {
 
 const fetchAll = async (req, res) => {
   try {
-    const { org_id } = req.query;
+    const { org } = req.query;
+    const org_id = await Org.findOne({ slug: org }).select('_id');
     const allChannels = await Channel.find({
       org_id,
       $and: [{ users: { $elemMatch: { $eq: req.user._id } } }],
