@@ -55,8 +55,8 @@ const joinChannel = asyncHandler(async (req, res) => {
 });
 
 const fetchAllChannels = asyncHandler(async (req, res) => {
-  const { org_id } = req.query;
-  if (!org_id) {
+  const { org } = req.query;
+  if (!org) {
     errorResponse({ res, message: "Please fill required fields!" });
   }
   const data = await fetchAll(req, res);
