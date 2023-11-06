@@ -7,6 +7,7 @@ const {
   renameChannel,
   fetchOneChannel,
   getMembers,
+  channelList,
 } = require("../controllers/channelController");
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.route("/fetch-all-channels").get(protect, fetchAllChannels);
 router.route("/rename").put(protect, renameChannel);
 router.route("/fetch-channel/:channelId").get(protect, fetchOneChannel);
 router.route("/get-members").get(protect, getMembers);
+router.route("/channel-list").get(protect, channelList);
 
 module.exports = router;

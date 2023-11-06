@@ -7,6 +7,7 @@ const {
   rename,
   fetch,
   members,
+  fetchList,
 } = require("../services/channelService");
 
 const createChannel = asyncHandler(async (req, res) => {
@@ -134,11 +135,28 @@ const getMembers = asyncHandler(async (req, res) => {
   }
 });
 
+const channelList = asyncHandler(async (req, res) => {
+  const data = await fetchList(req, res);
+  if (data) {
+    successResponse({
+      res,
+      message: "Channels list fetched successfully",
+      data: data,
+    });
+  } else {
+    errorResponse({
+      res,
+      message: "Something went wrong!",
+    });
+  }
+})
+
 module.exports = {
   createChannel,
   joinChannel,
   fetchAllChannels,
   renameChannel,
   fetchOneChannel,
-  getMembers
+  getMembers,
+  channelList,
 };
