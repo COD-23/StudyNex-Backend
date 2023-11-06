@@ -92,7 +92,7 @@ const rename = async (req, res) => {
 const fetch = async (req, res) => {
   try {
     const { channelId } = req.params;
-    const channel = await Channel.find({
+    const channel = await Channel.findOne({
       _id: channelId,
       $and: [{ users: { $elemMatch: { $eq: req.user._id } } }],
     })
