@@ -58,7 +58,7 @@ const join = async (req, res) => {
 const fetchAll = async (req, res) => {
   try {
     const { org } = req.query;
-    const org_id = await Org.findOne({ slug: org }).select('_id');
+    const org_id = await Org.findOne({ slug: org }).select("_id");
     const allChannels = await Channel.find({
       org_id,
       $and: [{ users: { $elemMatch: { $eq: req.user._id } } }],
@@ -92,7 +92,7 @@ const rename = async (req, res) => {
 const fetch = async (req, res) => {
   try {
     const { channelId } = req.params;
-    const channel = await Channel.find({
+    const channel = await Channel.findOne({
       _id: channelId,
       $and: [{ users: { $elemMatch: { $eq: req.user._id } } }],
     })
@@ -129,4 +129,20 @@ const members = async (req, res) => {
   }
 };
 
-module.exports = { create, join, fetchAll, rename, fetch, members };
+const fetchList = async (req, res) => {
+  try {
+    const { org } = req.query;
+    const org_id = await Org.findOne({ slug: org }).select("_id");
+    const allChannels = await Channel.find({
+      org_id,
+    })
+      .populate("admin_id", "-password")
+      .populate("users", "-password")
+      .sort({ updatedAt: -1 });
+    return allChannels;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { create, join, fetchAll, rename, fetch, members, fetchList };
