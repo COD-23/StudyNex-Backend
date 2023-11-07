@@ -12,6 +12,9 @@ const create = async (req, res) => {
       description,
       org_id,
     });
+    channel.users.push(req.user._id);
+    await channel.save();
+    await channel.populate("users", "-password");
     await channel.populate("admin_id", "-password");
     await channel.populate("org_id");
 
@@ -117,7 +120,7 @@ const members = async (req, res) => {
 
     channel.users.forEach((user) => {
       if (
-        (user.fname && user.name.match(new RegExp(search, "i"))) ||
+        (user.name && user.name.match(new RegExp(search, "i"))) ||
         (user.email && user.email.match(new RegExp(search, "i")))
       ) {
         matchingUsers.push(user);
@@ -131,7 +134,7 @@ const members = async (req, res) => {
 
 const fetchList = async (req, res) => {
   try {
-    const { org } = req.query;
+    const { org, search } = req.query;
     const org_id = await Org.findOne({ slug: org }).select("_id");
     const allChannels = await Channel.find({
       org_id,
@@ -139,7 +142,15 @@ const fetchList = async (req, res) => {
       .populate("admin_id", "-password")
       .populate("users", "-password")
       .sort({ updatedAt: -1 });
-    return allChannels;
+
+    const matchingChannels = [];
+
+    allChannels.forEach((channel) => {
+      if (channel.name && channel.name.match(new RegExp(search, "i"))) {
+        matchingChannels.push(channel);
+      }
+    });
+    return matchingChannels;
   } catch (error) {
     console.log(error);
   }

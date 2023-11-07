@@ -39,7 +39,7 @@ const joinChannel = asyncHandler(async (req, res) => {
   if (data == "exists") {
     errorResponse({
       res,
-      message: "User has already joined!",
+      message: "You have already joined!",
     });
   } else if (data) {
     successResponse({
