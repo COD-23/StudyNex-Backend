@@ -143,14 +143,14 @@ const fetchList = async (req, res) => {
       .populate("users", "-password")
       .sort({ updatedAt: -1 });
 
-    const matchingUsers = [];
+    const matchingChannels = [];
 
     allChannels.forEach((channel) => {
       if (channel.name && channel.name.match(new RegExp(search, "i"))) {
         matchingChannels.push(channel);
       }
     });
-    return matchingUsers;
+    return matchingChannels;
   } catch (error) {
     console.log(error);
   }
