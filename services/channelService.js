@@ -109,7 +109,7 @@ const fetch = async (req, res) => {
 
 const members = async (req, res) => {
   try {
-    const { channelId, search } = req.body;
+    const { channelId, searchKey } = req.body;
     const channel = await Channel.findOne({ _id: channelId }).populate("users");
 
     if (!channel) {
@@ -120,8 +120,8 @@ const members = async (req, res) => {
 
     channel.users.forEach((user) => {
       if (
-        (user.name && user.name.match(new RegExp(search, "i"))) ||
-        (user.email && user.email.match(new RegExp(search, "i")))
+        (user.name && user.name.match(new RegExp(searchKey, "i"))) ||
+        (user.email && user.email.match(new RegExp(searchKey, "i")))
       ) {
         matchingUsers.push(user);
       }
