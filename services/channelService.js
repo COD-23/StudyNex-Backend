@@ -12,6 +12,9 @@ const create = async (req, res) => {
       description,
       org_id,
     });
+    channel.users.push(req.user._id);
+    await channel.save();
+    await channel.populate("users", "-password");
     await channel.populate("admin_id", "-password");
     await channel.populate("org_id");
 
