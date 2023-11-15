@@ -10,18 +10,20 @@ const access = async (req, res) => {
     // userList.push(JSON.parse(req.user._id));
     console.log(userList);
 
-    // // const chatExist = await Chat.find({
-    // //   $and: [
-    // //     { users: { $elemMatch: { $eq: req.user._id } } },
-    // //     { users: { $elemMatch: { $eq: userId } } },
-    // //   ],
-    // // })
-    // //   .populate("users", "-password")
-    // //   .populate("latest_message");
+    const chatExist = await Chat.findOne({
+      // $and: [
+      //   { users: { $elemMatch: { $eq: req.user._id } } },
+      //   { users: { $elemMatch: { $eq: userId } } },
+      // ],
+      chatName: chatName,
+    })
 
-    // // if (chatExist) {
-    // //   successResponse({});
-    // // }
+      .populate("users", "-password")
+      .populate("latest_message");
+
+    if (chatExist) {
+      errorResponse({ res, message: "Chat already exists" });
+    }
 
     const chat = await Chat.create({
       chatName: chatName,
@@ -30,12 +32,13 @@ const access = async (req, res) => {
     });
 
     if (chat) {
-      const data = {
-        name: chat.chatName,
-        users: chat.users,
-        group_admin: chat.group_admin,
-        latest_message: chat.latest_message,
-      };
+      // const data = {
+      //   name: chat.chatName,
+      //   users: chat.users,
+      //   group_admin: chat.group_admin,
+      //   latest_message: chat.latest_message,
+      // };
+      const data = await Chat.findOne({ chatName: chat.chatName });
       return data;
     }
   } catch (error) {
@@ -66,12 +69,14 @@ const fetchMsg = async (req, res) => {
 
 const sendMsg = async (req, res) => {
   try {
-    const { content, chat } = req.body;
+    const { content, chat, type, receiver } = req.body;
 
     const message = await Message.create({
       sender: req.user._id,
+      type: type,
+      receiver: receiver,
       content: content,
-      chat: chat
+      chat: chat,
     });
     await message.populate("sender", "name");
     await message.populate("chat");
@@ -80,6 +85,7 @@ const sendMsg = async (req, res) => {
     //     path:"chat.users",
     //     select:"name email",
     // })
+
     //storing current msg as latest msg in chat collection.
     await Chat.findByIdAndUpdate(chat, { latest_message: message });
     return message;

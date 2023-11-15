@@ -7,10 +7,12 @@ const messageModel = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
-    receiver: {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
-    },
+    receiver: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
     content: {
       type: String,
       required: true,
@@ -20,7 +22,7 @@ const messageModel = mongoose.Schema(
       enum: ["Text", "Media", "Document", "Link"],
     },
     attachments: {
-        type: String,
+      type: String,
     },
     chat: {
       type: mongoose.Schema.ObjectId,

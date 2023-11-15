@@ -60,8 +60,8 @@ const fetchAllMessages = asyncHandler(async (req, res) => {
 });
 
 const sendMessage = asyncHandler(async (req, res) => {
-  const { content, chat } = req.body;
-  if (!content || !chat) {
+  const { content, chat, type, receiver } = req.body;
+  if (!content || !chat || !type || !receiver) {
     return errorResponse({ res, message: "Please fill required fields!" });
   }
   const data = await sendMsg(req, res);
