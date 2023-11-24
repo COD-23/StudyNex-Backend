@@ -17,12 +17,16 @@ const access = async (req, res) => {
       // ],
       chatName: chatName,
     })
-
       .populate("users", "-password")
       .populate("latest_message");
 
     if (chatExist) {
-      errorResponse({ res, message: "Chat already exists" });
+      return successResponse({
+        res,
+        message: "Chat already exists",
+        data: chatExist,
+      });
+      // return chatExist;
     }
 
     const chat = await Chat.create({
@@ -32,12 +36,6 @@ const access = async (req, res) => {
     });
 
     if (chat) {
-      // const data = {
-      //   name: chat.chatName,
-      //   users: chat.users,
-      //   group_admin: chat.group_admin,
-      //   latest_message: chat.latest_message,
-      // };
       const data = await Chat.findOne({ chatName: chat.chatName });
       return data;
     }
