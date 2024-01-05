@@ -16,7 +16,7 @@ const accessChat = asyncHandler(async (req, res) => {
       data: data,
     });
   } else {
-    errorResponse({
+    return errorResponse({
       res,
       message: "Something went wrong! Unable to create chat",
     });
@@ -52,7 +52,7 @@ const fetchAllMessages = asyncHandler(async (req, res) => {
       data: data,
     });
   } else {
-    errorResponse({
+    return errorResponse({
       res,
       message: "Something went wrong! Unable to fetch messages",
     });
@@ -61,7 +61,7 @@ const fetchAllMessages = asyncHandler(async (req, res) => {
 
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chat, type, receiver } = req.body;
-  if (!content || !chat || !type || !receiver) {
+  if (!chat || !type || !receiver) {
     return errorResponse({ res, message: "Please fill required fields!" });
   }
   const data = await sendMsg(req, res);
@@ -72,7 +72,7 @@ const sendMessage = asyncHandler(async (req, res) => {
       data: data,
     });
   } else {
-    errorResponse({
+    return errorResponse({
       res,
       message: "Something went wrong! Unable to send message",
     });

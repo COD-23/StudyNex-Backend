@@ -15,11 +15,13 @@ const messageModel = mongoose.Schema(
     ],
     content: {
       type: String,
-      required: true,
+    },
+    mediaContent: {
+      type: String,
     },
     type: {
       type: String,
-      enum: ["Text", "Media", "Document", "Link"],
+      enum: ["Text", "Image", "Document", "Video","Hybrid"],
     },
     attachments: {
       type: String,

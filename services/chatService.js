@@ -8,7 +8,7 @@ const access = async (req, res) => {
     const { userList, chatName } = req.body;
     // let users = JSON.parse(userList);
     // userList.push(JSON.parse(req.user._id));
-    console.log(userList);
+    // console.log(userList);
 
     const chatExist = await Chat.findOne({
       // $and: [
@@ -67,7 +67,7 @@ const fetchMsg = async (req, res) => {
 
 const sendMsg = async (req, res) => {
   try {
-    const { content, chat, type, receiver } = req.body;
+    const { content, chat, type, receiver, mediaContent } = req.body;
 
     const message = await Message.create({
       sender: req.user._id,
@@ -75,6 +75,7 @@ const sendMsg = async (req, res) => {
       receiver: receiver,
       content: content,
       chat: chat,
+      mediaContent: mediaContent,
     });
     await message.populate("sender", "name");
     await message.populate("chat");
