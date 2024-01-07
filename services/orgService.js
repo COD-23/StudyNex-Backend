@@ -7,7 +7,7 @@ const { errorResponse } = require("../helpers/apiResponse");
 const fetch = async (req, res) => {
   const { query } = req;
   const org = await Org.findOne({ slug: query.org });
-  if(org){
+  if (org) {
     await org.populate("users", "-password");
     await org.populate("admin_id", "-password");
   }
@@ -39,6 +39,7 @@ const create = async (req, res) => {
 
     if (org) {
       const data = {
+        _id: org._id,
         admin_id: org.admin_id,
         name: org.name,
         org_code: org.org_code,
@@ -79,7 +80,7 @@ const join = async (req, res) => {
       user.org_joined = org.slug;
       await user.save();
 
-      const userData = await org.populate("users","-password"); // retrieving respective users data using populate
+      const userData = await org.populate("users", "-password"); // retrieving respective users data using populate
       return userData;
     }
   } catch (error) {
@@ -108,7 +109,7 @@ const leave = async (req, res) => {
       user.org_joined = undefined;
       await user.save();
 
-      const userData = await org.populate("users","-password"); // retrieving respective users data using populate
+      const userData = await org.populate("users", "-password"); // retrieving respective users data using populate
       return userData;
     }
   } catch (error) {
@@ -116,4 +117,4 @@ const leave = async (req, res) => {
     errorResponse({ res, message: "Something went wrong!" });
   }
 };
-module.exports = { create, join, fetch,leave };
+module.exports = { create, join, fetch, leave };

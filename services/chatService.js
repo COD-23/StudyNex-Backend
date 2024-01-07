@@ -67,7 +67,7 @@ const fetchMsg = async (req, res) => {
 
 const sendMsg = async (req, res) => {
   try {
-    const { content, chat, type, receiver, mediaContent } = req.body;
+    const { content, chat, type, receiver, mediaType,attachments } = req.body;
 
     const message = await Message.create({
       sender: req.user._id,
@@ -75,7 +75,8 @@ const sendMsg = async (req, res) => {
       receiver: receiver,
       content: content,
       chat: chat,
-      mediaContent: mediaContent,
+      mediaType: mediaType,
+      attachments: attachments,
     });
     await message.populate("sender", "name");
     await message.populate("chat");

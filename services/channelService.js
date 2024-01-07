@@ -19,13 +19,14 @@ const create = async (req, res) => {
     await channel.populate("org_id");
 
     if (channel) {
-      const data = {
-        _id: channel._id,
-        admin_id: channel.admin_id,
-        name: channel.name,
-        description: channel.description,
-        org_id: channel.org_id,
-      };
+      // const data = {
+      //   _id: channel._id,
+      //   admin_id: channel.admin_id,
+      //   name: channel.name,
+      //   description: channel.description,
+      //   org_id: channel.org_id,
+      // };
+      const data = await Channel.findOne({ _id: channel._id });
       return data;
     }
     return null;

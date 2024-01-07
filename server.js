@@ -44,8 +44,7 @@ io.on("connection", (socket) => {
     socket.join(room);
   });
 
-  socket.on("text_message", (data) => {
-    // console.log("received message", data);
+  socket.on("new_message", (data) => {
     let chat = data.chat;
     if (!chat.users) {
       errorResponse({ message: "chat.users not defined" });

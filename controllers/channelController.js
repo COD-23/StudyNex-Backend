@@ -124,7 +124,7 @@ const getMembers = asyncHandler(async (req, res) => {
   if (data) {
     successResponse({
       res,
-      message: "Channel fetched successfully",
+      message: "Channel members fetched successfully",
       data: data,
     });
   } else {

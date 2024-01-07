@@ -16,15 +16,16 @@ const messageModel = mongoose.Schema(
     content: {
       type: String,
     },
-    mediaContent: {
+    attachments: {
       type: String,
     },
     type: {
       type: String,
-      enum: ["Text", "Image", "Document", "Video","Hybrid"],
+      enum: ["Text", "Media", "Hybrid"],
     },
-    attachments: {
+    mediaType: {
       type: String,
+      enum: ["Image", "Video", "Document","Unknown"],
     },
     chat: {
       type: mongoose.Schema.ObjectId,
