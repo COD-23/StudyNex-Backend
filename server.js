@@ -57,10 +57,10 @@ io.on("connection", (socket) => {
   });
 
   //meet events
-  socket.on("join-room", (roomId, id, name) => {
+  socket.on("join-room", (roomId, id, name,image) => {
     console.log(`A new user ${id} has joined the room ${roomId}`);
     socket.join(roomId);
-    socket.broadcast.to(roomId).emit("user-connected", id, name);
+    socket.broadcast.to(roomId).emit("user-connected", id, name, image);
   });
 
   socket.on("user-toggle-audio", (userId, roomId) => {
