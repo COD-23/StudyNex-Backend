@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 dotenv.config();
-const port = process.env.PORT || "4001";
+const port = process.env.PORT || "4000";
 
 connectDatabase();
 
@@ -54,6 +54,28 @@ io.on("connection", (socket) => {
         socket.in(userId).emit("message_received", data);
       }
     }
+  });
+
+  //meet events
+  socket.on("join-room", (roomId, id, name) => {
+    console.log(`A new user ${id} has joined the room ${roomId}`);
+    socket.join(roomId);
+    socket.broadcast.to(roomId).emit("user-connected", id, name);
+  });
+
+  socket.on("user-toggle-audio", (userId, roomId) => {
+    socket.join(roomId);
+    socket.broadcast.to(roomId).emit("user-toggle-audio", userId);
+  });
+
+  socket.on("user-toggle-video", (userId, roomId) => {
+    socket.join(roomId);
+    socket.broadcast.to(roomId).emit("user-toggle-video", userId);
+  });
+
+  socket.on("user-leave", (userId, roomId) => {
+    socket.join(roomId);
+    socket.broadcast.to(roomId).emit("user-leave", userId);
   });
 
   socket.on("end", async (data) => {
