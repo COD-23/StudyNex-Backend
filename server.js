@@ -34,6 +34,7 @@ const io = require("socket.io")(server, {
   pingTimeout: 60000,
 });
 
+//chat events
 io.on("connection", (socket) => {
   socket.on("setup", (user) => {
     socket.join(user._id); // user joined to the room
@@ -57,7 +58,7 @@ io.on("connection", (socket) => {
   });
 
   //meet events
-  socket.on("join-room", (roomId, id, name,image) => {
+  socket.on("join-room", (roomId, id, name, image) => {
     console.log(`A new user ${id} has joined the room ${roomId}`);
     socket.join(roomId);
     socket.broadcast.to(roomId).emit("user-connected", id, name, image);
@@ -71,6 +72,12 @@ io.on("connection", (socket) => {
   socket.on("user-toggle-video", (userId, roomId) => {
     socket.join(roomId);
     socket.broadcast.to(roomId).emit("user-toggle-video", userId);
+  });
+
+  socket.on("user-send-message", (userId, roomId, message) => {
+    console.log("Heyyyyyy")
+    socket.join(roomId);
+    socket.broadcast.to(roomId).emit("user-send-message", userId, message);
   });
 
   socket.on("user-leave", (userId, roomId) => {
