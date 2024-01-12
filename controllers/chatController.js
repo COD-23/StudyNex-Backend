@@ -1,6 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const { successResponse, errorResponse } = require("../helpers/apiResponse");
-const { fetch, access, fetchMsg, sendMsg } = require("../services/chatService");
+const {
+  fetch,
+  access,
+  fetchMsg,
+  sendMsg,
+  deleteMsg,
+} = require("../services/chatService");
 
 const accessChat = asyncHandler(async (req, res) => {
   const { chatName, userList } = req.body;
@@ -79,4 +85,30 @@ const sendMessage = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { accessChat, fetchChat, fetchAllMessages, sendMessage };
+const deletMessage = asyncHandler(async (req, res) => {
+  const { messageId } = req.body;
+  if (!messageId) {
+    return errorResponse({ res, message: "Please fill required fields!" });
+  }
+  const data = await deleteMsg(req, res);
+  if (data) {
+    successResponse({
+      res,
+      message: "Message deleted successfully",
+      data: data,
+    });
+  } else {
+    return errorResponse({
+      res,
+      message: "Something went wrong! Unable to send message",
+    });
+  }
+});
+
+module.exports = {
+  accessChat,
+  fetchChat,
+  fetchAllMessages,
+  sendMessage,
+  deletMessage,
+};

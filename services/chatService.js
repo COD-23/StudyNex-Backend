@@ -61,13 +61,13 @@ const fetchMsg = async (req, res) => {
     return messages;
   } catch (error) {
     console.log(error);
-    errorResponse({ res, message: "Something went wrong!" });
+    return errorResponse({ res, message: "Something went wrong!" });
   }
 };
 
 const sendMsg = async (req, res) => {
   try {
-    const { content, chat, type, receiver, mediaType,attachments } = req.body;
+    const { content, chat, type, receiver, mediaType, attachments } = req.body;
 
     const message = await Message.create({
       sender: req.user._id,
@@ -91,8 +91,22 @@ const sendMsg = async (req, res) => {
     return message;
   } catch (error) {
     console.log(error);
-    errorResponse({ res, message: "Something went wrong!" });
+    return errorResponse({ res, message: "Something went wrong!" });
   }
 };
 
-module.exports = { access, fetch, fetchMsg, sendMsg };
+const deleteMsg = async (req, res) => {
+  try {
+    const { messageId } = req.body;
+    const deletedMessage = await Message.findOne({
+      _id: messageId,
+    });
+    await Message.deleteOne({ _id: messageId });
+    return deletedMessage;
+  } catch (error) {
+    console.log(error);
+    return errorResponse({ res, message: "Something went wrong!" });
+  }
+};
+
+module.exports = { access, fetch, fetchMsg, sendMsg, deleteMsg };
