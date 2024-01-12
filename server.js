@@ -77,7 +77,8 @@ io.on("connection", (socket) => {
   socket.on("user-send-message", (userId, message, roomId) => {
     console.log("Heyyyyyy");
     socket.join(roomId);
-    socket.broadcast.to(roomId).emit("user-send-message", userId, message);
+    // socket.broadcast.to(roomId).emit("user-send-message", userId, message);
+    io.to(roomId).emit("user-send-message", { userId, message });
   });
 
   socket.on("user-leave", (userId, roomId) => {
