@@ -74,8 +74,8 @@ io.on("connection", (socket) => {
     socket.broadcast.to(roomId).emit("user-toggle-video", userId);
   });
 
-  socket.on("user-send-message", (userId, roomId, message) => {
-    console.log("Heyyyyyy")
+  socket.on("user-send-message", (userId, message, roomId) => {
+    console.log("Heyyyyyy");
     socket.join(roomId);
     socket.broadcast.to(roomId).emit("user-send-message", userId, message);
   });
