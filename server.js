@@ -46,15 +46,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new_message", (data, roomId) => {
-    // let chat = data.chat;
-    // if (!chat.users) {
-    //   errorResponse({ message: "chat.users not defined" });
-    // }
-    // for (const userId of chat.users) {
-    //   if (userId !== data.sender._id) {
-    //     socket.in(userId).emit("message_received", data);
-    //   }
-    // }
     socket.join(roomId);
     socket.broadcast.to(roomId).emit("new_message", data);
   });
