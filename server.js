@@ -75,10 +75,10 @@ io.on("connection", (socket) => {
     socket.broadcast.to(roomId).emit("user-toggle-video", userId);
   });
 
-  socket.on("user-send-message", (userId, message, roomId) => {
+  socket.on("user-send-message", (message, roomId, name) => {
     console.log("Heyyyyyy");
     socket.join(roomId);
-    socket.broadcast.to(roomId).emit("user-send-message", userId, message);
+    socket.broadcast.to(roomId).emit("user-send-message", message, name);
   });
 
   socket.on("user-leave", (userId, roomId) => {
