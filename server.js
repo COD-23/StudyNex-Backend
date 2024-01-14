@@ -45,17 +45,18 @@ io.on("connection", (socket) => {
     socket.join(room);
   });
 
-  socket.on("new_message", (data) => {
-    let chat = data.chat;
-    if (!chat.users) {
-      errorResponse({ message: "chat.users not defined" });
-    }
-    for (const userId of chat.users) {
-      if (userId !== data.sender._id) {
-        socket.in(userId).emit("message_received", data);
-      }
-    }
-    // socket.broadcast.to(room).emit("message_received", data);
+  socket.on("new_message", (data, roomId) => {
+    // let chat = data.chat;
+    // if (!chat.users) {
+    //   errorResponse({ message: "chat.users not defined" });
+    // }
+    // for (const userId of chat.users) {
+    //   if (userId !== data.sender._id) {
+    //     socket.in(userId).emit("message_received", data);
+    //   }
+    // }
+    socket.join(roomId);
+    socket.broadcast.to(roomId).emit("new_message", data);
   });
 
   //meet events
@@ -76,14 +77,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("user-send-message", (message, roomId, name) => {
-    console.log("Heyyyyyy");
     socket.join(roomId);
     socket.broadcast.to(roomId).emit("user-send-message", message, name);
-  });
-
-  socket.on("screen-share-message", (userId, roomId,data) => {
-    screenData = JSON.parse(data);
-    socket.broadcast.to(roomId).emit('screen-share-message',userId, screenData);
   });
 
   socket.on("user-leave", (userId, roomId) => {
