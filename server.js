@@ -82,8 +82,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("screen-share-message", (userId, roomId,data) => {
-    data = JSON.parse(data);
-    socket.broadcast.to(roomId).emit('screen-share-message',userId, data);
+    screenData = JSON.parse(data);
+    socket.broadcast.to(roomId).emit('screen-share-message',userId, screenData);
   });
 
   socket.on("user-leave", (userId, roomId) => {
