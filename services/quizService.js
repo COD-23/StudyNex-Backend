@@ -42,7 +42,7 @@ const getAll = async (req, res) => {
       org_id,
       channel_id,
       is_active: active ? true : false,
-    });
+    }).sort({ updatedAt: -1 });;
     return quizzes;
   } catch (error) {
     console.log(error);
