@@ -33,7 +33,7 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const { org_id, channel_id, active } = req.body;
+    const { org_id, channel_id, active } = req.query;
 
     if (!org_id || !channel_id) {
       return "empty";
@@ -100,7 +100,7 @@ const submit = async (req, res) => {
 
 const getQuizByUser = async (req, res) => {
   try {
-    const { org_id, active } = req.body;
+    const { org_id, active } = req.query;
 
     if (!org_id) {
       return "empty";
