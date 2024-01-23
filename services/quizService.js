@@ -42,7 +42,7 @@ const getAll = async (req, res) => {
       org_id,
       channel_id,
       is_active: active ? true : false,
-    }).sort({ updatedAt: -1 });;
+    }).sort({ updatedAt: -1 });
     return quizzes;
   } catch (error) {
     console.log(error);
@@ -89,7 +89,10 @@ const submit = async (req, res) => {
     });
     await User.updateOne(
       { _id: req.user._id },
-      { $set: { points: points } },
+      {
+        $set: { "quizPerformance.currentPerformance": points },
+        $push: { "quizPerformance.pastPerformances": points },
+      },
       { new: true }
     );
     return quizzes;
@@ -125,7 +128,6 @@ const getQuizByUser = async (req, res) => {
       notSubmittedQuizzes,
       userSubmittedQuizzes,
     };
-    return quizzes;
   } catch (error) {
     console.log(error);
   }
