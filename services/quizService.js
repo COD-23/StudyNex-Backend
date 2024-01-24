@@ -132,7 +132,7 @@ const getQuizByUser = async (req, res) => {
       user_id: req.user._id,
     }).populate({
       path: "quiz_id",
-      match: { is_active: false },
+      match: { is_active: active ? true : false },
     });
 
     const submittedQuizIds = userSubmittedQuizzes.map((userMap) =>
