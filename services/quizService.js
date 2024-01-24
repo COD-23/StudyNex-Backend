@@ -128,15 +128,21 @@ const getQuizByUser = async (req, res) => {
         is_active: active ? true : false,
       });
     }
-    const userSubmittedQuizzes = await QuizUserMap.find({
+    
+    let userSubmittedQuizzes = await QuizUserMap.find({
       user_id: req.user._id,
     }).populate({
       path: "quiz_id",
       match: { is_active: active ? true : false },
     });
 
+    userSubmittedQuizzes = userSubmittedQuizzes
+      .map((userMap) => userMap.quiz_id)
+      .filter(Boolean);
+
+
     const submittedQuizIds = userSubmittedQuizzes.map((userMap) =>
-      userMap.quiz_id._id.toString()
+      userMap?.quiz_id?._id.toString()
     );
 
     const notSubmittedQuizzes = quizzes.filter(
