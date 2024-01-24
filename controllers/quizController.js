@@ -73,6 +73,11 @@ const submitQuiz = asyncHandler(async (req, res) => {
       res,
       message: "Please fill all the fields",
     });
+  }else if (data === "exists") {
+    errorResponse({
+      res,
+      message: "User already submitted the quiz",
+    });
   } else if (data) {
     successResponse({
       res,
