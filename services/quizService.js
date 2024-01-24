@@ -142,7 +142,7 @@ const getQuizByUser = async (req, res) => {
 
 
     const submittedQuizIds = userSubmittedQuizzes.map((userMap) =>
-      userMap?.quiz_id?._id.toString()
+      userMap?._id.toString()
     );
 
     const notSubmittedQuizzes = quizzes.filter(
