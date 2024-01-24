@@ -169,7 +169,13 @@ const resetPass = async (req, res) => {
 
 const getUserPoints = async (req, res) => {
   try {
-    const data = await User.find({}, "username quizPerformance")
+    const { org } = req.params;
+    if (!org)
+      return errorResponse({ res, message: "Organization is required!" });
+    const data = await User.find(
+      { org_joined: org, "quizPerformance.currentPerformance": { $ne: null } },
+      "username quizPerformance"
+    )
       .sort({ "quizPerformance.currentPerformance": -1 })
       .then((users) => {
         return users;

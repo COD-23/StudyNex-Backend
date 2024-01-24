@@ -15,6 +15,6 @@ router.route("/login").post(login);
 router.route("/user").get(protect, getUser);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
-router.route("/get-user-progress").get(getUserProgress);
+router.route("/get-user-progress/:org").get(getUserProgress);
 
 module.exports = router;
