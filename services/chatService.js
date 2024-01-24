@@ -5,16 +5,13 @@ const User = require("../models/userModel");
 
 const access = async (req, res) => {
   try {
-    const { userList, chatName } = req.body;
-    // let users = JSON.parse(userList);
-    // userList.push(JSON.parse(req.user._id));
-    // console.log(userList);
+    const { userList, chatName, org } = req.body;
+    if (!userList || !chatName || !org) {
+      return errorResponse({ res, message: "Please fill all fields!" });
+    }
 
     const chatExist = await Chat.findOne({
-      // $and: [
-      //   { users: { $elemMatch: { $eq: req.user._id } } },
-      //   { users: { $elemMatch: { $eq: userId } } },
-      // ],
+      org: org,
       chatName: chatName,
     })
       .populate("users", "-password")
@@ -43,9 +40,6 @@ const access = async (req, res) => {
     console.log(error);
     errorResponse({ res, message: "Something went wrong!" });
   }
-};
-const fetch = async (req, res) => {
-  const { body } = req;
 };
 
 const fetchMsg = async (req, res) => {

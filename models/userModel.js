@@ -32,6 +32,7 @@ const userModel = mongoose.Schema(
     quizPerformance: {
       currentPerformance: {
         type: Number,
+        default: 0,
       },
       pastPerformances: {
         type: [Number],
