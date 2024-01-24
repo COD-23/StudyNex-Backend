@@ -6,6 +6,7 @@ const {
   loginUser,
   forgotPass,
   resetPass,
+  getUserPoints,
 } = require("../services/userService");
 
 const register = asyncHandler(async (req, res) => {
@@ -79,4 +80,28 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { register, login, getUser, forgotPassword, resetPassword };
+const getUserProgress = asyncHandler(async (req, res) => {
+  try {
+    const data = await getUserPoints(req, res);
+    if (data) {
+      successResponse({
+        res,
+        message: "User progress fetched successfully!",
+        data: data,
+      });
+    } else {
+      errorResponse({ res, message: "Cant't fetch user progress right now!" });
+    }
+  } catch (error) {
+    errorResponse({ res, message: "Something went wrong!" });
+  }
+});
+
+module.exports = {
+  register,
+  login,
+  getUser,
+  forgotPassword,
+  resetPassword,
+  getUserProgress,
+};
