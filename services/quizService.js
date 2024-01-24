@@ -81,13 +81,13 @@ const submit = async (req, res) => {
     if (!quiz_id) {
       return "empty";
     }
-     const userSubmittedQuizzes = await QuizUserMap.find({
-       user_id: req.user._id,
-       quiz_id
-     });
-     if(userSubmittedQuizzes){
+    const userSubmittedQuizzes = await QuizUserMap.find({
+      user_id: req.user._id,
+      quiz_id,
+    });
+    if (userSubmittedQuizzes) {
       return "exists";
-     }
+    }
     const quizzes = await QuizUserMap.create({
       quiz_id,
       user_id: req.user._id,
@@ -110,15 +110,24 @@ const submit = async (req, res) => {
 
 const getQuizByUser = async (req, res) => {
   try {
-    const { org_id, active } = req.query;
+    const { org_id, active, channel_id } = req.query;
 
     if (!org_id) {
       return "empty";
     }
-    const quizzes = await Quiz.find({
-      org_id,
-      is_active: active ? true : false,
-    });
+    let quizzes = null;
+    if (channel_id) {
+      quizzes = await Quiz.find({
+        org_id,
+        channel_id,
+        is_active: active ? true : false,
+      });
+    } else {
+      quizzes = await Quiz.find({
+        org_id,
+        is_active: active ? true : false,
+      });
+    }
     const userSubmittedQuizzes = await QuizUserMap.find({
       user_id: req.user._id,
     }).populate("quiz_id");
