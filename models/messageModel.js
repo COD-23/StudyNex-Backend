@@ -25,11 +25,11 @@ const messageModel = mongoose.Schema(
     },
     mediaType: {
       type: String,
-      enum: ["Image", "Video", "Document","Unknown"],
+      enum: ["Image", "Video", "Document", "Unknown"],
     },
-    chat: {
+    channel: {
       type: mongoose.Schema.ObjectId,
-      ref: "Chats",
+      ref: "Channels",
     },
   },
   {

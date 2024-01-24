@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { successResponse, errorResponse } = require("../helpers/apiResponse");
 const {
-  fetch,
   access,
   fetchMsg,
   sendMsg,
@@ -29,25 +28,9 @@ const accessChat = asyncHandler(async (req, res) => {
   }
 });
 
-const fetchChat = asyncHandler(async (req, res) => {
-  const data = await fetch(req, res);
-  if (data) {
-    successResponse({
-      res,
-      message: "Organization created successfully",
-      data: data,
-    });
-  } else {
-    errorResponse({
-      res,
-      message: "Something went wrong! Unable to create organization",
-    });
-  }
-});
-
 const fetchAllMessages = asyncHandler(async (req, res) => {
-  const { chatId } = req.params;
-  if (!chatId) {
+  const { channelId } = req.params;
+  if (!channelId) {
     return errorResponse({ res, message: "Please fill required fields!" });
   }
   const data = await fetchMsg(req, res);
@@ -66,8 +49,8 @@ const fetchAllMessages = asyncHandler(async (req, res) => {
 });
 
 const sendMessage = asyncHandler(async (req, res) => {
-  const { content, chat, type, receiver } = req.body;
-  if (!chat || !type || !receiver) {
+  const { content, channel, type, receiver } = req.body;
+  if (!channel || !type || !receiver) {
     return errorResponse({ res, message: "Please fill required fields!" });
   }
   const data = await sendMsg(req, res);
@@ -107,7 +90,7 @@ const deletMessage = asyncHandler(async (req, res) => {
 
 module.exports = {
   accessChat,
-  fetchChat,
+  // fetchChat,
   fetchAllMessages,
   sendMessage,
   deletMessage,
