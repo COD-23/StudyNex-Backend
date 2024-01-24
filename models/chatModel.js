@@ -21,6 +21,10 @@ const chatModel = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Messages",
     },
+    org: {
+      type: String,
+      ref: "Organizations",
+    },
   },
   {
     timestamps: true,

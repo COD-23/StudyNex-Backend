@@ -85,7 +85,7 @@ const submit = async (req, res) => {
       user_id: req.user._id,
       quiz_id,
     });
-    if (userSubmittedQuizzes) {
+    if (userSubmittedQuizzes.length !== 0) {
       return "exists";
     }
     const quizzes = await QuizUserMap.create({
@@ -95,11 +95,11 @@ const submit = async (req, res) => {
       points,
     });
 
-    const prevPoints = User.find(
+    const userPointData = await User.findOne(
       { _id: req.user._id },
-      "quizPerformance.currentPerformance"
+      { "quizPerformance.currentPerformance": 1, _id: 0 }
     );
-    console.log(prevPoints);
+    const prevPoints = userPointData?.quizPerformance?.currentPerformance;
     const newPoints = prevPoints ? prevPoints + points : points;
 
     await User.updateOne(

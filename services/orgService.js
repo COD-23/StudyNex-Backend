@@ -3,6 +3,7 @@ const Org = require("../models/orgModel");
 const randomstring = require("randomstring");
 const User = require("../models/userModel");
 const { errorResponse } = require("../helpers/apiResponse");
+const Channel = require("../models/channelModel");
 
 const fetch = async (req, res) => {
   const { query } = req;
@@ -69,6 +70,15 @@ const join = async (req, res) => {
     }
 
     const org = await Org.findOne({ org_code: org_code });
+    const channel = await Channel.findOne({
+      $and: [{ name: "General" }, { org_id: org?._id }],
+    });
+
+    //By default storing user to general channel
+    if (channel) {
+      channel.users.push(req.user._id);
+      await channel.save();
+    }
 
     if (org) {
       //Storing id of the user to Org collection
@@ -100,7 +110,7 @@ const leave = async (req, res) => {
     const org = await Org.findOne({ org_code: org_code });
 
     if (org) {
-      //Storing id of the user to Org collection
+      //Retrieving id of the user to Org collection
       org.users.pull(req.user._id);
       await org.save(); // updating document
 
