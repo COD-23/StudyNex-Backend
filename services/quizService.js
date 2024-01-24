@@ -94,14 +94,23 @@ const submit = async (req, res) => {
       answers,
       points,
     });
+
+    const prevPoints = User.find(
+      { _id: req.user._id },
+      "quizPerformance.currentPerformance"
+    );
+    console.log(prevPoints);
+    const newPoints = prevPoints ? prevPoints + points : points;
+
     await User.updateOne(
       { _id: req.user._id },
       {
-        $set: { "quizPerformance.currentPerformance": points },
-        $push: { "quizPerformance.pastPerformances": points },
+        $set: { "quizPerformance.currentPerformance": newPoints },
+        $push: { "quizPerformance.pastPerformances": newPoints },
       },
       { new: true }
     );
+
     return quizzes;
   } catch (error) {
     console.log(error);
