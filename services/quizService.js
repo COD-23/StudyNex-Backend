@@ -85,7 +85,7 @@ const submit = async (req, res) => {
       user_id: req.user._id,
       quiz_id,
     });
-    if (userSubmittedQuizzes) {
+    if (userSubmittedQuizzes.length !== 0) {
       return "exists";
     }
     const quizzes = await QuizUserMap.create({
