@@ -137,7 +137,7 @@ const getQuizByUser = async (req, res) => {
         is_active: active ? true : false,
       });
     }
-    
+
     let userSubmittedQuizzes = await QuizUserMap.find({
       user_id: req.user._id,
     }).populate({
@@ -146,12 +146,11 @@ const getQuizByUser = async (req, res) => {
     });
 
     userSubmittedQuizzes = userSubmittedQuizzes
-      .map((userMap) => userMap.quiz_id)
+      .map((userMap) => ({ quiz: userMap.quiz_id, points: userMap.points }))
       .filter(Boolean);
 
-
     const submittedQuizIds = userSubmittedQuizzes.map((userMap) =>
-      userMap?._id.toString()
+      userMap?.quiz._id.toString()
     );
 
     const notSubmittedQuizzes = quizzes.filter(
