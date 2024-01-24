@@ -29,9 +29,14 @@ const userModel = mongoose.Schema(
     image: {
       type: String,
     },
-    points: {
-      type: Number,
-      defaultValue: 0,
+    quizPerformance: {
+      currentPerformance: {
+        type: Number,
+      },
+      pastPerformances: {
+        type: [Number],
+        default: [0],
+      },
     },
     token: {
       type: String,
@@ -46,6 +51,9 @@ const userModel = mongoose.Schema(
 );
 
 userModel.pre("save", async function (next) {
+  if (!this.quizPerformance.pastPerformances.includes(0)) {
+    this.quizPerformance.pastPerformances.unshift(0);
+  }
   if (!this.isModified("password")) {
     next();
   }

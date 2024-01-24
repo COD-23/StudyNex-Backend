@@ -167,4 +167,41 @@ const resetPass = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, forgotPass, resetPass };
+const getUserPoints = async (req, res) => {
+  try {
+    const { org } = req.params;
+    if (!org)
+      return errorResponse({ res, message: "Organization is required!" });
+    const data = await User.find(
+      { org_joined: org, "quizPerformance.currentPerformance": { $ne: null } },
+      "username quizPerformance"
+    )
+      .sort({ "quizPerformance.currentPerformance": -1 })
+      .then((users) => {
+        return users;
+      })
+      .catch((err) => {
+        console.log("Error fetching documents", err);
+      });
+
+    const rankUsers = data.map((user, index) => ({
+      id: index + 1,
+      username: user.username,
+      currentPoints: user.quizPerformance.currentPerformance,
+      pastPoints: user.quizPerformance.pastPerformances,
+      // ...user._doc,
+    }));
+    return rankUsers;
+  } catch (error) {
+    console.log(error);
+    errorResponse({ res, message: "Something went wrong!" });
+  }
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  forgotPass,
+  resetPass,
+  getUserPoints,
+};

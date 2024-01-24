@@ -5,7 +5,6 @@ const { errorResponse } = require("../helpers/apiResponse");
 
 const protect = asyncHandler(async (req, res, next) => {
   let token;
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -19,7 +18,7 @@ const protect = asyncHandler(async (req, res, next) => {
       errorResponse({ res, message: "Unauthorized" });
     }
   } else {
-    errorResponse({ res, message: "Unauthorized" });
+    errorResponse({ res, message: "Unauthorizedd" });
   }
 });
 
