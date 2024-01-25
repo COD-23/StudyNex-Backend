@@ -135,7 +135,15 @@ const getQuizByUser = async (req, res) => {
       quizzes = await Quiz.find({
         org_id,
         is_active: active ? true : false,
-      });
+      }).populate("channel_id");
+    }
+
+    if (!channel_id) {
+      quizzes = quizzes.filter((quiz) =>
+        quiz.channel_id?.users.some(
+          (user) => user._id.toString() === req.user._id.toString()
+        )
+      );
     }
 
     let userSubmittedQuizzes = await QuizUserMap.find({
