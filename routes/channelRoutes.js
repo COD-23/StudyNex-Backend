@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const protect = require("../middlewares/authMiddleware");
 const {
   createChannel,
@@ -8,6 +8,7 @@ const {
   fetchOneChannel,
   getMembers,
   channelList,
+  channelLeave,
 } = require("../controllers/channelController");
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.route("/rename-channel").put(protect, renameChannel);
 router.route("/fetch-channel/:channelId").get(protect, fetchOneChannel);
 router.route("/get-members").post(protect, getMembers);
 router.route("/channel-list").get(protect, channelList);
+router.route("/leave-channel/:channelId").get(protect, channelLeave);
 
 module.exports = router;

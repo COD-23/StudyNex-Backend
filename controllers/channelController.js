@@ -8,6 +8,7 @@ const {
   fetch,
   members,
   fetchList,
+  leaveChannel,
 } = require("../services/channelService");
 
 const createChannel = asyncHandler(async (req, res) => {
@@ -149,7 +150,27 @@ const channelList = asyncHandler(async (req, res) => {
       message: "Something went wrong!",
     });
   }
-})
+});
+
+const channelLeave = asyncHandler(async (req, res) => {
+  const { channelId } = req.params;
+  if (!channelId) {
+    errorResponse({ res, message: "Please fill required fields!" });
+  }
+  const data = await leaveChannel(req, res);
+  if (data) {
+    successResponse({
+      res,
+      message: "Channels leaved successfully",
+      data: data,
+    });
+  } else {
+    errorResponse({
+      res,
+      message: "Something went wrong!",
+    });
+  }
+});
 
 module.exports = {
   createChannel,
@@ -159,4 +180,5 @@ module.exports = {
   fetchOneChannel,
   getMembers,
   channelList,
+  channelLeave,
 };

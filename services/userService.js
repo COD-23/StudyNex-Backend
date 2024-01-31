@@ -173,7 +173,13 @@ const getUserPoints = async (req, res) => {
     if (!org)
       return errorResponse({ res, message: "Organization is required!" });
     const data = await User.find(
-      { org_joined: org, "quizPerformance.currentPerformance": { $ne: null } },
+      {
+        org_joined: org,
+        $and: [
+          { "quizPerformance.currentPerformance": { $ne: null } },
+          { "quizPerformance.currentPerformance": { $ne: 0 } },
+        ],
+      },
       "username quizPerformance"
     )
       .sort({ "quizPerformance.currentPerformance": -1 })

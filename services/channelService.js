@@ -19,13 +19,6 @@ const create = async (req, res) => {
     await channel.populate("org_id");
 
     if (channel) {
-      // const data = {
-      //   _id: channel._id,
-      //   admin_id: channel.admin_id,
-      //   name: channel.name,
-      //   description: channel.description,
-      //   org_id: channel.org_id,
-      // };
       const data = await Channel.findOne({ _id: channel._id });
       return data;
     }
@@ -157,4 +150,27 @@ const fetchList = async (req, res) => {
   }
 };
 
-module.exports = { create, join, fetchAll, rename, fetch, members, fetchList };
+const leaveChannel = async (req, res) => {
+  try {
+    const { channelId } = req.params;
+    const channel = await Channel.findById({
+      _id: channelId,
+    });
+    channel.users.pull(req?.user?._id);
+    await channel.save();
+    return channel;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  create,
+  join,
+  fetchAll,
+  rename,
+  fetch,
+  members,
+  fetchList,
+  leaveChannel,
+};
